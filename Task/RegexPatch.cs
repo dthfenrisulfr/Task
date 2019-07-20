@@ -44,15 +44,10 @@ namespace Task
                     var file = Path.GetFileName(path);
                     foreach (string regex in regexFile)
                     {
-                        
-                        
-                            Regex reg = new Regex(regex,
-                                RegexOptions.IgnoreCase |
-                                RegexOptions.Compiled);
+                        Regex reg = new Regex(regex,
+                        RegexOptions.IgnoreCase);
 
-                            if (reg.IsMatch(file)) patchCollection.Add(path);
-                        
-
+                        if (reg.IsMatch(file)) patchCollection.Add(path);
                     }
                 }
             }
