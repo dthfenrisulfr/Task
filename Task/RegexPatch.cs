@@ -21,27 +21,15 @@ namespace Task
             }
             catch (FileNotFoundException e)
             {
-
-                Console.WriteLine(e.FileName + " не существует." +
-                    '\n' + "Убедитесь в правильности ввода передаваемых аргументов." +
-                    '\n' + "В качестве аргументов командной строки приложение получает три параметра:" +
-                    '\n' + "1 - Путь к папке" +
-                    '\n' + "2 - Путь к файлу со списком масок регулярных выражений " +
-                    '\n' + "3 - Путь к файлу результатов" +
-                    '\n' + "Для продолжения нажмите любую клавишу...");
+                Console.WriteLine(e.FileName + " не существует.");
+                SendMessage();
                 Console.ReadKey();
                 Environment.Exit(1);
             }
             catch (DirectoryNotFoundException e)
             {
-
-                Console.WriteLine(e.Message + " не существует." +
-                    '\n' + "Убедитесь в правильности ввода передаваемых аргументов." +
-                    '\n' + "В качестве аргументов командной строки приложение получает три параметра:" +
-                    '\n' + "1 - Путь к папке" +
-                    '\n' + "2 - Путь к файлу со списком масок регулярных выражений " +
-                    '\n' + "3 - Путь к файлу результатов" +
-                    '\n' + "Для продолжения нажмите любую клавишу...");
+                Console.WriteLine(e.Message + " не существует.");
+                SendMessage();
                 Console.ReadKey();
                 Environment.Exit(1);
             }
@@ -56,27 +44,27 @@ namespace Task
                     var file = Path.GetFileName(path);
                     foreach (string regex in regexFile)
                     {
-                        try
-                        {
+                        
+                        
                             Regex reg = new Regex(regex,
                                 RegexOptions.IgnoreCase |
                                 RegexOptions.Compiled);
 
                             if (reg.IsMatch(file)) patchCollection.Add(path);
-                        }
-                        catch (ArgumentException e)
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Некорректное регулярное выражение.");
-                            Console.WriteLine("{0}: {1}", e.GetType().Name, e.Message);
-                        }
+                        
+
                     }
                 }
             }
+            catch (ArgumentException e)
+            {
+                Console.Clear();
+                Console.WriteLine("Некорректное регулярное выражение.");
+                Console.WriteLine("{0}: {1}", e.GetType().Name, e.Message);
+            }
             catch (UnauthorizedAccessException e)
             {
-                Console.WriteLine(e.Message + '\n' +
-                    "Для продолжение нажмите любую клавишу...");
+                Console.WriteLine(e.Message + '\n' + "Для продолжение нажмите любую клавишу...");
                 Console.ReadKey();
                 return;
             }
@@ -92,7 +80,7 @@ namespace Task
                 catch (DirectoryNotFoundException e)
                 {
                     Console.Clear();
-                    Console.WriteLine(e.Message + '\n' + "Для продолжения нажмите любую клавижу");
+                    Console.WriteLine(e.Message + '\n' + "Для продолжения нажмите любую клавищу...");
                     Console.ReadKey();
                     return;
                 }
@@ -107,6 +95,16 @@ namespace Task
             else Console.WriteLine("Совпадения не найдены.");
             Console.WriteLine("Для продолжения нажмите любую клавишу...");
             Console.ReadKey();
+        }
+
+        static public void SendMessage()
+        {
+            Console.WriteLine('\n' + "Убедитесь в правильности ввода передаваемых аргументов." +
+    '\n' + "В качестве аргументов командной строки приложение получает три параметра:" +
+    '\n' + "1 - Путь к папке" +
+    '\n' + "2 - Путь к файлу со списком масок регулярных выражений " +
+    '\n' + "3 - Путь к файлу результатов" +
+    '\n' + "Для продолжения нажмите любую клавишу...");
         }
     }
 }
