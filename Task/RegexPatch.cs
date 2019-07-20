@@ -32,6 +32,19 @@ namespace Task
                 Console.ReadKey();
                 Environment.Exit(1);
             }
+            catch (DirectoryNotFoundException e)
+            {
+
+                Console.WriteLine(e.Message + " не существует." +
+                    '\n' + "Убедитесь в правильности ввода передаваемых аргументов." +
+                    '\n' + "В качестве аргументов командной строки приложение получает три параметра:" +
+                    '\n' + "1 - Путь к папке" +
+                    '\n' + "2 - Путь к файлу со списком масок регулярных выражений " +
+                    '\n' + "3 - Путь к файлу результатов" +
+                    '\n' + "Для продолжения нажмите любую клавишу...");
+                Console.ReadKey();
+                Environment.Exit(1);
+            }
         }
         public void GetMatсh()
         {
@@ -72,7 +85,24 @@ namespace Task
             {
                 Console.WriteLine($"Пути, к файлам удовлетворяющим маске поиска, сохранены в {resultFile}.");
                 patchCollection.Add(new string('-', 25));
-                File.AppendAllLines(resultFile, patchCollection);
+                try
+                {
+                    File.AppendAllLines(resultFile, patchCollection);
+                }
+                catch (DirectoryNotFoundException e)
+                {
+                    Console.Clear();
+                    Console.WriteLine(e.Message + '\n' + "Для продолжения нажмите любую клавижу");
+                    Console.ReadKey();
+                    return;
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    Console.Clear();
+                    Console.WriteLine(e.Message + '\n' + "Для продолжения нажмите любую клавишу...");
+                    Console.ReadKey();
+                    return;
+                }
             }
             else Console.WriteLine("Совпадения не найдены.");
             Console.WriteLine("Для продолжения нажмите любую клавишу...");
