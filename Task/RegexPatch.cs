@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -70,7 +71,8 @@ namespace Task
                 patchCollection.Add(new string('-', 25));
                 try
                 {
-                    File.AppendAllLines(resultFile, patchCollection);
+                    var result = patchCollection.Distinct();
+                    File.AppendAllLines(resultFile, result);
                 }
                 catch (DirectoryNotFoundException e)
                 {
