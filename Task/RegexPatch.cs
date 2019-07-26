@@ -37,16 +37,21 @@ namespace Task
         }
         public void GetMatсh()
         {
-            var file = filesCollectionPath.Select(x => Path.GetFileName(x));
-            IEnumerable<string> patchCollection = new List<string>();
-
             try
             {
-                foreach (var regex in regexFile)
+                var  patchCollection = regexFile.SelectMany(y=> filesCollectionPath.Select(x => Path.GetFileName(x)).Where(x => Regex.IsMatch(x, y)));
+
+                if (patchCollection.Count() != 0)
                 {
-                    var temp = file.Where(x => Regex.IsMatch(x, regex));
-                    patchCollection = temp.Concat(patchCollection);
+                    var result = patchCollection.SelectMany(y => filesCollectionPath.Where(x => x.Contains(y))).Append(new string('-', 25)).Distinct();
+
+                    Console.WriteLine($"Пути, к файлам удовлетворяющим маске поиска, сохранены в {resultFile}.");
+
+                    File.AppendAllLines(resultFile, result);
                 }
+                else Console.WriteLine("Совпадения не найдены.");
+                Console.WriteLine("Для продолжения нажмите любую клавишу...");
+                Console.ReadKey();
             }
 
             catch (ArgumentException e)
@@ -61,40 +66,13 @@ namespace Task
                 Console.ReadKey();
                 return;
             }
-
-            if (patchCollection.Count() != 0)
+            catch (DirectoryNotFoundException e)
             {
-                IEnumerable<string> result = new List<string>();
-                foreach (var str in patchCollection)
-                {
-                    var temp = filesCollectionPath.Where(x => x.Contains(str));
-                    result = temp.Concat(result);
-                }
-
-                Console.WriteLine($"Пути, к файлам удовлетворяющим маске поиска, сохранены в {resultFile}.");
-                try
-                {
-                    result = result.Append(new string('-', 25)).Distinct();
-                    File.AppendAllLines(resultFile, result);
-                }
-                catch (DirectoryNotFoundException e)
-                {
-                    Console.Clear();
-                    Console.WriteLine(e.Message + '\n' + "Для продолжения нажмите любую клавищу...");
-                    Console.ReadKey();
-                    return;
-                }
-                catch (UnauthorizedAccessException e)
-                {
-                    Console.Clear();
-                    Console.WriteLine(e.Message + '\n' + "Для продолжения нажмите любую клавишу...");
-                    Console.ReadKey();
-                    return;
-                }
+                Console.Clear();
+                Console.WriteLine(e.Message + '\n' + "Для продолжения нажмите любую клавищу...");
+                Console.ReadKey();
+                return;
             }
-            else Console.WriteLine("Совпадения не найдены.");
-            Console.WriteLine("Для продолжения нажмите любую клавишу...");
-            Console.ReadKey();
         }
 
         static public void SendMessage()
