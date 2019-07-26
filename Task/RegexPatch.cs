@@ -37,14 +37,15 @@ namespace Task
         }
         public void GetMatсh()
         {
-            var file1 = filesCollectionPath.Select(x => Path.GetFileName(x));
+            var file = filesCollectionPath.Select(x => Path.GetFileName(x));
             IEnumerable<string> patchCollection = new List<string>();
 
             try
             {
                 foreach (string regex in regexFile)
                 {
-                    patchCollection = file1.Where(x => Regex.IsMatch(x, regex));
+                    var temp = file.Where(x => Regex.IsMatch(x, regex));
+                    patchCollection = temp.Concat(patchCollection);
                 }
             }
 
@@ -63,7 +64,7 @@ namespace Task
 
             if (patchCollection.Count() != 0)
             {
-                var result = patchCollection.Append(new string('-', 25)).Distinct();
+               var result = patchCollection.Append(new string('-', 25)).Distinct();
                 Console.WriteLine($"Пути, к файлам удовлетворяющим маске поиска, сохранены в {resultFile}.");
                 try
                 {
