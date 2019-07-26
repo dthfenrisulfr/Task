@@ -42,7 +42,7 @@ namespace Task
 
             try
             {
-                foreach (string regex in regexFile)
+                foreach (var regex in regexFile)
                 {
                     var temp = file.Where(x => Regex.IsMatch(x, regex));
                     patchCollection = temp.Concat(patchCollection);
@@ -64,10 +64,17 @@ namespace Task
 
             if (patchCollection.Count() != 0)
             {
-               var result = patchCollection.Append(new string('-', 25)).Distinct();
+                IEnumerable<string> result = new List<string>();
+                foreach (var str in patchCollection)
+                {
+                    var temp = filesCollectionPath.Where(x => x.Contains(str));
+                    result = temp.Concat(result);
+                }
+
                 Console.WriteLine($"Пути, к файлам удовлетворяющим маске поиска, сохранены в {resultFile}.");
                 try
                 {
+                    result = result.Append(new string('-', 25)).Distinct();
                     File.AppendAllLines(resultFile, result);
                 }
                 catch (DirectoryNotFoundException e)
